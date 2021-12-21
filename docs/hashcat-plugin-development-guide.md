@@ -433,6 +433,10 @@ The final hash should go to line_buf[] array and the length of the data in this 
 
 Note: the general rule is that the kernel code should not do any unnecessary repetition of data manipulation (e.g byte swaps etc) because it should run as fast as possible. Instead, the encoder and decoder are host functions that are normally only executed very rarely - and therefore it is not a problem if they need to change the data a little bit to pre-compute, or adapt the data to make it look nice in the output.
 
+### module_hash_decode_postprocess() ###
+
+This module can be used when you have certain configuration items of a hash that you want to override with a command line parameter. A good example is the --hccapx-message-pair, where the user can add additional filter criteria so that Hashcat doesn't load a specific set of hashes from the hash list.
+
 ### module_opts_type() ###
 
 This configuration item is a bitmask field and is very similar to the module_opti_type() function. The main difference is that here you configure general options of the workflow and not optimization specific settings. As always, the list of flags can be found here: `include/types.h`. The following list contains the flags currently supported:
@@ -793,7 +797,7 @@ One very unique feature is that the tokenizer allows you to have both dynamic le
 The first step after declaring the tokenizer context buffer is to create its configuration. There is just one mandatory parameter and a maximum of 128 optional configuration items (columns). The mandatory configuration item needs to be set to the number of columns/fields which the hash line includes. Note that this is a fixed value. For more complex hash lines with a dynamic column count you need to create multiple tokenizer instances (e.g. use a second configuration, if the first one failed), but in most of the times this is not required.
 
 ```
-token_t token;
+hc_token_t token;
 
 token.token_cnt = 1;
 ```
